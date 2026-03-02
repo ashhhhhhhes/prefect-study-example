@@ -1,0 +1,25 @@
+# prefect.yaml
+deployments:
+  # 1번 배포: 가벼운 부하 (30초)
+  - name: "light-load-deploy"
+    entrypoint: "stress_test.py:stress_test_flow"
+    parameters:
+      stress_seconds: 30
+    work_pool:
+      name: "pool-A"
+
+  # 2번 배포: 무거운 부하 (300초 / 5분)
+  - name: "heavy-load-deploy"
+    entrypoint: "stress_test.py:stress_test_flow"
+    parameters:
+      stress_seconds: 300
+    work_pool:
+      name: "pool-A"
+
+# Git에서 코드를 가져오는 공통 설정
+pull:
+  - prefect.deployments.steps.git_clone:
+      repository: "https://github.com/ashhhhhhhes/prefect-study-example.git"
+      branch: "main" # 테스트하려는 브랜치명 입력
+  - prefect.deployments.steps.pip_install:
+      requirements: "requirements.txt"
