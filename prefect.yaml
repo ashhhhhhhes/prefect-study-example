@@ -14,12 +14,15 @@ deployments:
     parameters:
       stress_seconds: 300
     work_pool:
-      name: "pool-A"
+      name: "pool-B"
 
 # Git에서 코드를 가져오는 공통 설정
 pull:
   - prefect.deployments.steps.git_clone:
+      id: clone_step  # 1. 이 단계에 ID를 부여합니다.
       repository: "https://github.com/ashhhhhhhes/prefect-study-example.git"
       branch: "main" # 테스트하려는 브랜치명 입력
-  - prefect.deployments.steps.pip_install_requirements: # 명칭 변경 확인
-      requirements_file: "requirements.txt"
+
+  - prefect.deployments.steps.pip_install_requirements:
+      requirements_file: requirements.txt
+      directory: "{{ clone_step.directory }}" # 2. 위에서 클론한 폴더 내부에서 실행하도록 지정합니다.
