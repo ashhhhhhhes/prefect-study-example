@@ -6,7 +6,7 @@ deployments:
     parameters:
       stress_seconds: 30
     work_pool:
-      name: "pool-A"
+      name: "works-process"
 
   # 2번 배포: 무거운 부하 (300초 / 5분)
   - name: "heavy-load-deploy"
@@ -14,7 +14,7 @@ deployments:
     parameters:
       stress_seconds: 300
     work_pool:
-      name: "pool-B"
+      name: "works-process"
 
 # Git에서 코드를 가져오는 공통 설정
 pull:

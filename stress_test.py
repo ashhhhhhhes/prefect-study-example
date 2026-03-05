@@ -7,11 +7,19 @@ import os
 
 @task(name="CPU 부하 생성")
 def cpu_stress_task(duration_sec: int):
-    print(f"🔥 {duration_sec}초 동안 CPU 부하 테스트를 시작합니다... (PID: {os.getpid()})")
+    pid = os.getpid()
+    print(f"🔥 {duration_sec}초 동안 CPU 부하 테스트를 시작합니다... (PID: {pid})")
     start_time = time.time()
+    last_log_time = start_time
     # CPU 1개를 100% 점유하는 루프
     while time.time() - start_time < duration_sec:
         _ = 100 * 100
+        now = time.time()
+        if now - last_log_time >= 5:
+            elapsed = int(now - start_time)
+            remaining = duration_sec - elapsed
+            print(f"⏳ [PID: {pid}] {elapsed}초 경과 / 남은 시간: {remaining}초")
+            last_log_time = now
     return "부하 테스트 완료"
 
 
