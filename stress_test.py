@@ -1,5 +1,4 @@
 from prefect import flow, task
-from prefect.deployments import Deployment
 import socket
 import multiprocessing
 import time
