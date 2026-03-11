@@ -13,7 +13,7 @@ definitions:
           PYTHONPATH: "/home/worker/apps/prefect-study-example"
           VIRTUAL_ENV: "/home/worker/apps/prefect-study-example/venv"
           PATH: "/home/worker/apps/prefect-study-example/venv/bin:/usr/local/bin:/usr/bin:/bin"
-          PREFECT_API_URL: "http://10.110.9.171:4200/api" # 실제 서버 IP로 수정 필요
+          PREFECT_API_URL: "http://172.31.15.229:4200/api" # 실제 서버 IP로 수정 필요
 
 # 1. Git pull 대신 로컬 디렉토리로 이동하는 설정
 pull:
