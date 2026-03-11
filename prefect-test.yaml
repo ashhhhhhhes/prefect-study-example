@@ -1,0 +1,42 @@
+# 프로젝트 이름 (프로젝트/배포명 구조의 앞부분)
+name: prefect-study-example
+
+# 공통 변수 정의 (job_variables 상속을 위해 필수)
+definitions:
+  work_pools:
+    - &default_pool_name "works-process"
+    - &default_job_vars
+        # 프로젝트 전용 가상환경의 파이썬을 명시적으로 사용
+        command: "/home/worker/apps/prefect-study-example/venv/bin/python -m prefect.engine"
+        env:
+          # 환경변수 상속 설정
+          PYTHONPATH: "/home/worker/apps/prefect-study-example"
+          VIRTUAL_ENV: "/home/worker/apps/prefect-study-example/venv"
+          PATH: "/home/worker/apps/prefect-study-example/venv/bin:/usr/local/bin:/usr/bin:/bin"
+          PREFECT_API_URL: "http://10.110.9.171:4200/api" # 실제 서버 IP로 수정 필요
+
+# 1. Git pull 대신 로컬 디렉토리로 이동하는 설정
+pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: "/home/worker/apps/prefect-study-example"
+
+deployments:
+  # 1번 배포: 가벼운 부하 (30초)
+  - name: "light-load-deploy"
+    entrypoint: "stress_test.py:stress_test_flow"
+    work_pool:
+      name: *default_pool_name
+    job_variables: *default_job_vars # ★ 중요: 루트 레벨에 배치하여 Run 정보에 포함되게 함
+    parameters:
+      stress_seconds: 30
+    tags: ["test", "light"]
+
+  # 2번 배포: 무거운 부하 (300초 / 5분)
+  - name: "heavy-load-deploy"
+    entrypoint: "stress_test.py:stress_test_flow"
+    work_pool:
+      name: *default_pool_name
+    job_variables: *default_job_vars # ★ 중요: 동일하게 변수 상속
+    parameters:
+      stress_seconds: 300
+    tags: ["test", "heavy"]
